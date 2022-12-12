@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} {{ block.super }} :: ПОИСК {% endblock %}
+{% block content %}
+<div class="about_section layout_padding">
+         <div class="container">
+            <div class="row">
+               {% for post in posts %}
+               <div class="col-lg-4 col-sm-12 card">
+                  <div class="about_img">
+                     {% if post.photo %}
+                     <img class="card-img-top" src="{{ post.photo.url }}" alt="{{ post.title }}" width="300px" height="200px">
+                     {% else %}
+                     <img src="https://picsum.photos/id/1060/350/188/?blur=2" alt="{{ post.title }}">
+                     {% endif %}
+                  </div>
+                  <div class="like_icon"><img src="{% static 'images/like-icon.png' %}"></div>
+                  <h2 class="most_text"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+                  <p class="post_text">{{ post.content|truncatewords_html:20|safe }}</p>
+                   <p class="post_text">{{ post.created_at|date:"d.m.Y" }}</p>
+                  <div class="social_icon_main">
+                     <div class="read_bt"><a href="{{ post.get_absolute_url }} ">Read More</a></div>
+                  </div>
+               </div>
+               {% empty %}
+                <h1>По Вашему запросу ничего не найдено...</h1>
+               {% endfor %}
+            </div>
+         </div>
+         {% if page_obj.has_other_pages %}
+         <div class="paginator">
+            <nav aria-label="...">
+              <ul class="pagination justify-content-center">
+                 {% if page_obj.has_previous %}
+                   <li class="page-item">
+                     <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Предыдущая</a>
+                   </li>
+                {% endif %}
+
+                 {% for p in page_obj.paginator.page_range %}
+                     {% if page_obj.number == p %}
+                       <li class="page-item active">
+                           <a class="page-link" href="?{{ s }}page={{ p }}" tabindex="-1">{{ p }}</a>
+                      </li>
+                     {% elif p > page_obj.number|add:-4 and  p < page_obj.number|add:4 %}
+                       <li class="page-item">
+                           <a class="page-link" href="?{{ s }}page={{ p }}" tabindex="-1">{{ p }}</a>
+                      </li>
+                     {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                   <li class="page-item">
+                     <a class="page-link" href="?{{ s }} page={{ page_obj.next_page_number }}" tabindex="-1">Следующая</a>
+                   </li>
+                {% endif %}
+              </ul>
+            </nav>
+         </div>
+         {% endif %}
+      </div>
+{% endblock %}
+

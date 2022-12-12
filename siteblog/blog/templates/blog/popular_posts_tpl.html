@@ -1,0 +1,20 @@
+ <h2 class="recent_taital">Recent post</h2>
+    {% for post in posts %}
+    <div class="recent_box">
+       <a href="{{ post.get_absolute_url }}">
+          <div class="recent_left">
+             <div class="image_6">
+                 {% if post.photo %}
+               <img src="{{ post.photo.url }}" width="130px" height="80px" alt="{{ post.title }}">
+                {% else %}
+                 <img src="https://picsum.photos/id/1060/130/80/?blur=2" width="130px" height="80px" alt="{{ post.title }}">
+                 {% endif %}
+             </div>
+          </div>
+          <div class="recent_right">
+             <h3 class="consectetur_text">{{ post.title }}</h3>
+             <p class="dolor_text">{{ post.created_at|date:"d.m.Y" }}</p>
+          </div>
+       </a>
+    </div>
+    {% endfor %}

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} {{ block.super }} :: {{ title }} {% endblock %}
+{% block content %}
+
+      <div class="container">
+            <form class="" action="{% url 'search' %}" method="get">
+                    <h2>Поиск Новости</h2>
+                    <input type="search" class="input_text" placeholder="Поиск..." name="s">
+                    <button type="submit" class="btn btn-primary">Поиск</button>
+            </form>
+      </div>
+      <div class='banner'>
+         <div class="container-fluid">
+            <div class="banner_section layout_padding">
+               <h1 class="banner_taital">welcome <br>our blog</h1>
+               <div id="my_slider" class="carousel slide carousel-fade" data-ride="carousel">
+                  <div class="carousel-inner">
+                     <div class="carousel-item active">
+                        <div class="image_main">
+                           <div class="container">
+                              <img src="{% static 'images/img-1.png' %}" class="image_1">
+                           </div>
+                        </div>
+                     </div>
+                     <div class="carousel-item">
+                        <div class="image_main">
+                           <div class="container">
+                              <img src="{% static 'images/img-2.png' %}" class="image_1">
+
+                           </div>
+                        </div>
+                     </div>
+                     <div class="carousel-item">
+                        <div class="image_main">
+                           <div class="container">
+                              <img src="{% static 'images/img-3.png' %}" class="image_1">
+
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <a class="carousel-control-prev" href="#my_slider" role="button" data-slide="prev">
+                  <i class="fa fa-angle-left"></i>
+                  </a>
+                  <a class="carousel-control-next" href="#my_slider" role="button" data-slide="next">
+                  <i class="fa fa-angle-right"></i>
+                  </a>
+               </div>
+            </div>
+         </div>
+      </div>
+      <hr>
+      <div class="about_section layout_padding">
+         <div class="container">
+            <div class="row">
+               {% for post in posts %}
+               <div class="col-lg-4 col-sm-12 card">
+                  <div class="about_img">
+                     {% if post.photo %}
+                     <img class="card-img-top" src="{{ post.photo.url }}" alt="{{ post.title }}" width="300px" height="200px">
+                     {% else %}
+                     <img src="https://picsum.photos/id/1060/350/188/?blur=2" alt="{{ post.title }}">
+                     {% endif %}
+                  </div>
+                  <div class="like_icon"><img src="{% static 'images/like-icon.png' %}"></div>
+                  <h2 class="most_text"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+                  <p class="post_text">{{ post.content|truncatewords_html:20|safe }}</p>
+                   <p class="post_text">{{ post.created_at|date:"d.m.Y" }}</p>
+                  <div class="social_icon_main">
+                     <div class="read_bt"><a href="{{ post.get_absolute_url }} ">Read More</a></div>
+                  </div>
+               </div>
+               {% endfor %}
+            </div>
+         </div>
+         {% if page_obj.has_other_pages %}
+         <div class="paginator">
+            <nav aria-label="...">
+              <ul class="pagination justify-content-center">
+                 {% if page_obj.has_previous %}
+                   <li class="page-item">
+                     <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Предыдущая</a>
+                   </li>
+                {% endif %}
+
+                 {% for p in page_obj.paginator.page_range %}
+                     {% if page_obj.number == p %}
+                       <li class="page-item active">
+                           <a class="page-link" href="?page={{ p }}" tabindex="-1">{{ p }}</a>
+                      </li>
+                     {% elif p > page_obj.number|add:-4 and  p < page_obj.number|add:4 %}
+                       <li class="page-item">
+                           <a class="page-link" href="?page={{ p }}" tabindex="-1">{{ p }}</a>
+                      </li>
+                     {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                   <li class="page-item">
+                     <a class="page-link" href="?page={{ page_obj.next_page_number }}" tabindex="-1">Следующая</a>
+                   </li>
+                {% endif %}
+              </ul>
+            </nav>
+         </div>
+         {% endif %}
+      </div>
+{% endblock %}
+
